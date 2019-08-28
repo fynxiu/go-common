@@ -1,0 +1,10 @@
+serviceName = "test"
+[[writers]]
+    type = "stdout"
+    level = "DEBUG"
+    enable = true
+[[writers]]
+    type = "file"
+    path = "./"
+    level = "INFO"
+    enable = true

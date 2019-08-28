@@ -1,5 +1,5 @@
 # log
-log module
+log module 
 
 > Just a wrapper now, should be refactored later.
 
@@ -7,7 +7,8 @@ log module
 
 ``` golang
 func init() {
-    log.Init("log.txt")
-    log.Info("hello log")
+	log.InitWithConfigFile("log/test.toml")
+	log.Info("Hello")
+	log.ErrorF("err: %v", "...")
 }
 ```

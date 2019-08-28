@@ -1,47 +1,120 @@
-/*
- */
 package log
 
 import (
-	log "github.com/alecthomas/log4go"
-	"time"
+	"github.com/BurntSushi/toml"
+	"github.com/rs/zerolog"
+	"io"
+	"log"
+	"os"
 )
 
-var l log.Logger
+type output string
 
-// Init 模块初始化调用
-func Init(filepath string) {
-	var logFilename = filepath
-	l = make(log.Logger)
-
-	fileLogWriter := log.NewFileLogWriter(logFilename, false)
-	consoleWriter := log.NewConsoleLogWriter()
-	consoleWriter.SetFormat("[%T] (%S) %M")
-
-	l.AddFilter("stdout", log.FINEST, consoleWriter)
-	l.AddFilter("logfile", log.INFO, fileLogWriter)
-
-	l.Info("Current time is : %s", time.Now().Format("15:04:05 MST 2006/01/02"))
-
-	return
+func (o output) isFile() bool {
+	return "file" == o
 }
 
-// Debug debug level log
-func Debug(arg0 interface{}, args ...interface{}) {
-	l.Debug(arg0, args)
+type Log struct {
+	loggers     []zerolog.Logger
+	serviceName string
 }
 
-// Info info level log
-func Info(arg0 interface{}, args ...interface{}) {
-	l.Info(arg0, args)
+var l *Log
+
+func Loggers() *Log {
+	return l
 }
 
-// Warn warn level log
-func Warn(arg0 interface{}, args ...interface{}) error {
-	return l.Warn(arg0, args)
+// InitWithConfigFile init logger with config file
+func InitWithConfigFile(file string) *Log {
+	_, err := toml.DecodeFile(file, &Conf)
+	if err != nil {
+		log.Fatalf("[log.InitWithConfigFile] failed to get/parse configuration from file: file=%v\n", file)
+	}
+	serviceName := Conf.ServiceName
+	writers := make([]zerolog.Logger, 2)
+	var w io.Writer
+	for k, v := range Conf.Writers {
+		if typ, ok := writerTypes[v.Type]; ok {
+			if typ == _file {
+				w = levelWriterImpl{
+					logPath:     v.Path,
+					serviceName: serviceName,
+				}
+			} else {
+				w = os.Stderr
+			}
+			writers[k] = zerolog.New(w).With().Timestamp().Logger()
+		} else {
+			log.Fatalf("[log.InitWithConfigFile] wrong logger type: type=%v\n", v.Type)
+		}
+	}
+
+	l = &Log{
+		loggers:     writers,
+		serviceName: serviceName,
+	}
+	return l
 }
 
-// Error error level log
-func Error(arg0 interface{}, args ...interface{}) error {
-	return l.Error(arg0, args)
+func (l *Log) Error(msg string) {
+	for _, e := range l.loggers {
+		e.Error().Msg(msg)
+	}
+}
+
+func (l *Log) ErrorF(format string, v ...interface{}) {
+	for _, e := range l.loggers {
+		e.Error().Msgf(format, v...)
+	}
+}
+
+func (l *Log) Info(msg string) {
+	for _, e := range l.loggers {
+		e.Info().Msg(msg)
+	}
+}
+
+func (l *Log) InfoF(format string, v ...interface{}) {
+	for _, e := range l.loggers {
+		e.Info().Msgf(format, v...)
+	}
+}
+
+func (l *Log) Debug(msg string) {
+	for _, e := range l.loggers {
+		e.Debug().Msg(msg)
+	}
+}
+
+func (l *Log) DebugF(format string, v ...interface{}) {
+	for _, e := range l.loggers {
+		e.Debug().Msgf(format, v...)
+	}
+}
+
+/* wrapper */
+
+func Error(msg string) {
+	l.Error(msg)
+}
+
+func ErrorF(format string, v ...interface{}) {
+	l.ErrorF(format, v...)
+}
+
+func Info(msg string) {
+	l.Info(msg)
+}
+
+func InfoF(format string, v ...interface{}) {
+	l.InfoF(format, v...)
+}
+
+func Debug(msg string) {
+	l.Debug(msg)
+}
+
+func DebugF(format string, v ...interface{}) {
+	l.DebugF(format, v...)
 }
