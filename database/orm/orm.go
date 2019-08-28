@@ -3,26 +3,26 @@ package orm
 import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
-	"go-common/log"
-	xtime "go-common/time"
+	"github.com/fynxiu/go-common/log"
+	xtime "github.com/fynxiu/go-common/time"
 	"strings"
 	"time"
 )
 
 // Config database config
 type Config struct {
-	DSN string // database source connection
-	Active int // active pool
-	Idle int // idle pool
+	DSN         string         // database source connection
+	Active      int            // active pool
+	Idle        int            // idle pool
 	IdleTimeout xtime.Duration // idle connection max life time
 }
 
-type ormLog struct {}
+type ormLog struct{}
 
+// Print ormLog print
 func (r ormLog) Print(v ...interface{}) {
 	log.Info(strings.Repeat("%v ", len(v)), v...)
 }
-
 
 func init() {
 	// TODO: custom error message
