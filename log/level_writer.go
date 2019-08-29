@@ -63,7 +63,7 @@ func createLogFile(lw *levelWriterImpl, level zerolog.Level) (file *os.File, err
 	//创建日志文件
 	filePath = dirPath + fileName
 
-	if file, err = os.OpenFile(filePath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0666); err != nil {
+	if file, err = os.OpenFile(filePath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0766); err != nil {
 		return
 	}
 
