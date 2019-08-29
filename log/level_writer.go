@@ -34,11 +34,11 @@ func createLogFile(lw *levelWriterImpl, level zerolog.Level) (file *os.File, err
 		dirPath  string
 	)
 
-	//获取当前日期
+	// 获取当前日期
 	t := time.Now()
 	today = t.Format(xtime.LayoutStandardShort)
 
-	//生成日志文件的名称
+	// 生成日志文件的名称
 	var fileName string
 	switch level {
 	case zerolog.ErrorLevel:
@@ -55,15 +55,15 @@ func createLogFile(lw *levelWriterImpl, level zerolog.Level) (file *os.File, err
 	sep := string(os.PathSeparator)
 	dirPath = lw.logPath + sep + lw.serviceName + sep + today + sep
 
-	//创建存放日志文件的目录
-	if err = os.MkdirAll(dirPath, os.ModeDir); err != nil {
+	// 创建存放日志文件的目录
+	if err = os.MkdirAll(dirPath, os.ModePerm); err != nil {
 		return
 	}
 
-	//创建日志文件
+	// 创建日志文件
 	filePath = dirPath + fileName
 
-	if file, err = os.OpenFile(filePath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0766); err != nil {
+	if file, err = os.OpenFile(filePath, os.O_RDWR|os.O_APPEND|os.O_CREATE, os.ModePerm); err != nil {
 		return
 	}
 
