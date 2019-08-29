@@ -8,7 +8,7 @@ import (
 )
 
 type levelWriterImpl struct {
-	logPath    string
+	logPath     string
 	serviceName string
 }
 

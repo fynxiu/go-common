@@ -13,11 +13,11 @@ func Test_output_isFile(t *testing.T) {
 		want bool
 	}{
 		{
-			o: "file",
+			o:    "file",
 			want: true,
 		},
 		{
-			o: "stdout",
+			o:    "stdout",
 			want: false,
 		},
 	}
