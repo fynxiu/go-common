@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestSDate_lessThan(t *testing.T) {
+func TestSDate_LessThan(t *testing.T) {
 	const d1 = "2006-06-20"
 	const d2 = "2006-06-21"
 	const d3 = "2006-06-22"
@@ -38,7 +38,7 @@ func TestSDate_lessThan(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.d.lessThan(tt.args.date); got != tt.want {
+			if got := tt.d.LessThan(tt.args.date); got != tt.want {
 				t.Errorf("SDate.lessThan() = %v, want %v", got, tt.want)
 			}
 		})

@@ -49,7 +49,7 @@ func (d SDate) AddDays(days int) SDate {
 
 // LessThanNow 是否是在今天之前
 func (d SDate) LessThanNow() bool {
-	return d.lessThan(Now())
+	return d.LessThan(Now())
 }
 
 // HowManyDaysBeforeNow 距离现在多少天， 昨天 1， 前天 2， 明天 -1
@@ -57,7 +57,7 @@ func (d SDate) HowManyDaysBeforeNow() int {
 	return int(time.Now().Sub(d.ToTime()).Hours() / 24)
 }
 
-func (d SDate) lessThan(date SDate) bool {
+func (d SDate) LessThan(date SDate) bool {
 	return d < SDate(date)
 }
 
