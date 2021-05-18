@@ -1,12 +1,20 @@
 package sdate
 
 import (
+	"regexp"
 	"time"
 
 	xtime "github.com/fynxiu/go-common/time"
 )
 
+var re = regexp.MustCompile(`^\d{4}-\d{2}-\d{2}$`)
+
 type SDate string
+
+// IsValidDate 是否是有效的日期
+func IsValidDate(date string) bool {
+	return re.MatchString(date)
+}
 
 func (d SDate) String() string {
 	return string(d)

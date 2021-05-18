@@ -122,3 +122,43 @@ func TestSDate_AddDays(t *testing.T) {
 		})
 	}
 }
+
+func TestIsValidDate(t *testing.T) {
+	tests := []struct {
+		name string
+		date string
+		want bool
+	}{
+		{
+			date: "2021-05-18",
+			want: true,
+		},
+		{
+			date: "2021-5-18",
+			want: false,
+		},
+		{
+			date: "21-05-18",
+			want: false,
+		},
+		{
+			date: "2021-05-8",
+			want: false,
+		},
+		{
+			date: "",
+			want: false,
+		},
+		{
+			date: "2021-05-181",
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := IsValidDate(tt.date); got != tt.want {
+				t.Errorf("IsValidDate() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
