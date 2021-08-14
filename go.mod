@@ -1,6 +1,6 @@
 module github.com/fynxiu/go-common
 
-go 1.12
+go 1.16
 
 require (
 	github.com/BurntSushi/toml v0.3.1
@@ -9,4 +9,5 @@ require (
 	github.com/jinzhu/gorm v1.9.10
 	github.com/rs/zerolog v1.15.0
 	github.com/stretchr/testify v1.2.2
+	github.com/tidwall/buntdb v1.2.6
 )
